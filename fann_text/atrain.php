@@ -1,18 +1,6 @@
 <?php
 
-
-$num_input = 256;
-$num_output = 4;
-$num_layers = 3;
-$num_neurons_hidden = 128;
-$max_epochs = 500000;
-$epochs_between_reports = 1000;
-
-
-$ann = fann_create_standard($num_layers, $num_input, $num_neurons_hidden, $num_output);
-
-$desired_error = fann_get_MSE($ann);
-
+$ann = fann_create_from_file("classify.txt");
 //fann_set_learning_rate($ann, 0.7);
 fann_set_train_stop_function($ann, FANN_STOPFUNC_MSE);
 //fann_set_train_stop_function($ann, FANN_STOPFUNC_BIT);
@@ -62,19 +50,19 @@ $num_output = 4;
 
 $data = [
     [
-        generate_frequencies(file_get_contents("en.txt")),
+        generate_frequencies(file_get_contents("en_new.txt")),
         [1, 0, 0, 0],
     ],
     [
-        generate_frequencies(file_get_contents("fr.txt")),
+        generate_frequencies(file_get_contents("fr_new.txt")),
         [0, 1, 0, 0],
     ],
     [
-        generate_frequencies(file_get_contents("pl.txt")),
+        generate_frequencies(file_get_contents("pl_new.txt")),
         [0, 0, 1, 0],
     ],
     [
-        generate_frequencies(file_get_contents("ru.txt")),
+        generate_frequencies(file_get_contents("ru_new.txt")),
         [0, 0, 0, 1],
     ],
 ];
@@ -92,10 +80,11 @@ foreach ($data as $value) {
 }
 
 $merged_train_data = $train_data[0];
-for($i = 1; $i < sizeof($train_data); $i++){
-$merged_train_data = fann_merge_train_data($merged_train_data, $train_data[$i]);
+if (sizeof($train_data) >= 2) {
+    for ($i = 1; $i < sizeof($train_data); $i++) {
+        $merged_train_data = fann_merge_train_data($merged_train_data, $train_data[$i]);
+    }
 }
-
 
 //-------------------------------------------------------------------------------------------------
 

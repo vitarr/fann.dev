@@ -1,23 +1,13 @@
 <?php
 
-
-$num_input = 256;
-$num_output = 4;
-$num_layers = 3;
-$num_neurons_hidden = 128;
-$max_epochs = 500000;
-$epochs_between_reports = 1000;
-
-
-$ann = fann_create_standard($num_layers, $num_input, $num_neurons_hidden, $num_output);
-
-$desired_error = fann_get_MSE($ann);
-
-//fann_set_learning_rate($ann, 0.7);
+$ann = fann_create_standard(3, 256, 256, 4);
+fann_set_learning_rate($ann, 0.7);
 fann_set_train_stop_function($ann, FANN_STOPFUNC_MSE);
 //fann_set_train_stop_function($ann, FANN_STOPFUNC_BIT);
 //fann_set_training_algorithm($ann, FANN_TRAIN_INCREMENTAL);
 fann_set_training_algorithm($ann, FANN_TRAIN_BATCH);
+fann_set_activation_function_hidden ($ann, FANN_SIGMOID_SYMMETRIC_STEPWISE);
+fann_set_activation_function_output ($ann, FANN_SIGMOID_SYMMETRIC_STEPWISE);
 
 //------------------------------------------------------------------------------------------------
 
